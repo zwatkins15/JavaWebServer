@@ -3,13 +3,17 @@ package com.zackwatkins.JavaWebServer;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
+import java.net.Socket;
 
 public class Server {
 	private static int SERVERPORT = 80, //Default
 					   MAXCONNECTIONS = 10;
 	private static final double VERSION = 0.01;
-	private static String SERVERIP = "127.0.0.1"; //Default
+	private static String SERVERIP = "127.0.0.1", //Default
+				          ROOTDIR = "www/"; //Default
 	private static ServerSocket listener;
+	private static Navigator files;
+	private static boolean running = true;
 	
 	
 	private static void handleArguments(String[] args) {
@@ -36,14 +40,33 @@ public class Server {
 	
 	private static void init() {
 		//TODO: Custom output for exceptions.
+		
+		//Create the server socket
 		try {
 			listener = new ServerSocket(SERVERPORT, MAXCONNECTIONS, InetAddress.getByName(SERVERIP));
-			System.out.printf("-INIT: Socket created: http://%s:%d.", SERVERIP, SERVERPORT);
+			System.out.printf("-INIT: Socket created: http://%s:%d.%n", SERVERIP, SERVERPORT);
 		} catch(IOException e) {
 			e.printStackTrace();
 		} catch(IllegalArgumentException e) {
 			e.printStackTrace();
 		}
+		
+		//Create the file navigator
+		try {
+			files = new Navigator(ROOTDIR);
+			System.out.printf("-INIT: Filesystem initiliazed in %s%n", files.getRootDir());
+		} catch(NullPointerException e) {
+			e.printStackTrace();
+		} catch(IllegalArgumentException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void handleRequest(Socket request) {
+		Request r = new Request(request);
+		
+		//DEBUG
+		System.out.printf("%s%n", r.getTargetFile());
 	}
 	
 	public static void main(String[] args) {
@@ -53,5 +76,13 @@ public class Server {
 		handleArguments(args);
 		//Create necessary objects and such...
 		init();
+		//Main server loop
+		while(running) {
+			try {
+				handleRequest(listener.accept());
+			} catch(IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }
