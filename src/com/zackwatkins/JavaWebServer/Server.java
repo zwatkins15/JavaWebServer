@@ -64,9 +64,13 @@ public class Server {
 	
 	public static void handleRequest(Socket request) {
 		Request r = new Request(request);
-		
-		//DEBUG
-		System.out.printf("%s%n", r.getTargetFile());
+		r.parse();
+		//Does the file exist?
+		if(files.doesFileExist(r.getTargetFile())) {
+			r.serveFile(files.readFile(r.getTargetFile()));
+		}
+		//Close it so it dosent hang up
+		r.close();
 	}
 	
 	public static void main(String[] args) {
