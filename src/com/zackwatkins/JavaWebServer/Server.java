@@ -68,8 +68,10 @@ public class Server {
 		//Does the file exist?
 		if(files.doesFileExist(r.getTargetFile())) {
 			r.serveFile(files.readFile(r.getTargetFile()));
+		} else {
+			r.serverError("404");
 		}
-		//Close it so it dosent hang up
+		
 		r.close();
 	}
 	
@@ -81,6 +83,7 @@ public class Server {
 		//Create necessary objects and such...
 		init();
 		//Main server loop
+		System.out.printf("-MAIN: Server running.%n");
 		while(running) {
 			try {
 				handleRequest(listener.accept());

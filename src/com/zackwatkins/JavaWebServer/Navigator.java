@@ -2,9 +2,9 @@ package com.zackwatkins.JavaWebServer;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Navigator {
 	private File rootDir = null;
@@ -21,7 +21,7 @@ public class Navigator {
 		//TODO: I want to store all files in a HexMap. So first we'd check that.
 		
 		// Manually check for file (Resource hungry)
-		File target = new File(fileName);
+		File target = new File(rootDir + fileName);
 		if(target.exists())
 			return true;
 		else 
@@ -29,12 +29,12 @@ public class Navigator {
 	}
 	
 	public File getFile(String fileName) {
-		return new File(fileName);
+		return new File(rootDir + fileName);
 	}
 	
-	public String[] readFile(String targetStr) {
+	public ArrayList<String> readFile(String targetStr) {
 		File target = getFile(targetStr);
-		String fileContents[] = null;
+		ArrayList<String> fileContents = new ArrayList<String>();
 		
 		try {
 			FileReader fr = new FileReader(target);
@@ -42,14 +42,14 @@ public class Navigator {
 			String nextLine;
 			int i = 0;
 			while((nextLine = in.readLine()) != null) {
-				fileContents[i] = nextLine;
+				fileContents.add(nextLine);
 				i++;
 			}
+			in.close();
 		} catch (IOException e) {
 			//We SHOULD have already checked for a 404
 			e.printStackTrace();
 		}
-		
 		
 		return fileContents;
 	}

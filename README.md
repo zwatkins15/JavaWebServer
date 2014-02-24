@@ -6,14 +6,16 @@ A simple web server written in Java
 Starting out as a project to help a friend of mine.
 Who knows, maybe it can be a neat project I work on.
 
+
+Usage
 =============
-= Usage
-=============
+
 Running the .class will obviously start the
 server. It does contain a few arguments that
 you may use if you wish, but all are optional.
 
 ------COMMANDS------
+
 Defaults are as follows:
 -p (PORT): 80
 -ip (LISTEN ADDRESS): 127.0.0.1
@@ -30,11 +32,5 @@ Commands are as follows:
  Supposedly it limits the ammount of concurrent connections.
  Since the server will eventually be threaded this might
  not be necassary.
---------------------
-
--------Files--------
-The only notable folders at the moment are:
- -bin (java classes)
- -src (java sources)
- -www (web server root directory)
+ 
 --------------------
